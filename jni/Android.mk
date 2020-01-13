@@ -51,13 +51,8 @@ endif
 #								Libs									#
 #																		#
 #########################################################################
-LOCAL_LDLIBS		:=  \
-	-llog				\
-	-landroid			\
-	-ldrm				\
-	-lutils				\
-	-lhardware			\
-	-lgui				\
+
+LOCAL_SHARED_LIBRARIES += liblog libandroid libutils libhardware libdrm libgui
 
 LOCAL_STATIC_LIBRARIES += libnxrearcam libnxdeinterlace libdeinterlacer_static libnx_v4l2 libnx_renderer
 
