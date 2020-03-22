@@ -93,6 +93,13 @@ JNIEXPORT jint JNICALL NX_JniNxRearCamStart( JNIEnv *env, jclass obj, jint dspX,
 	int32_t lcd_w = 1920;
 	int32_t lcd_h = 720;
 
+	if(iModule == 6)  //TP2825
+	{
+		cam_width = 1280;
+		cam_height = 720;
+		deinter_engine = NON_DEINTERLACER;
+	}
+
 	NX_REARCAM_INFO vip_info;
 	DISPLAY_INFO dsp_info;
 	DEINTERLACE_INFO deinter_info;
