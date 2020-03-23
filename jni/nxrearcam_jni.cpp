@@ -93,7 +93,7 @@ JNIEXPORT jint JNICALL NX_JniNxRearCamStart( JNIEnv *env, jclass obj, jint dspX,
 	int32_t lcd_w = 1920;
 	int32_t lcd_h = 720;
 
-	if(iModule == 6)  //TP2825
+	if(iModule == 6 || iModule == 9)  //TP2825
 	{
 		cam_width = 1280;
 		cam_height = 720;
