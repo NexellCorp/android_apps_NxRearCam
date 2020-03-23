@@ -152,7 +152,8 @@ JNIEXPORT jint JNICALL NX_JniNxRearCamStart( JNIEnv *env, jclass obj, jint dspX,
 	dsp_info.iDspHeight		= dp_h;
 	dsp_info.iPglEn         = pgl_en;
 	dsp_info.iLCDWidth      = lcd_w;
-	dsp_info.bSetCrtc		= lcd_h;
+	dsp_info.iLCDHeight		= lcd_h;
+	dsp_info.bSetCrtc		= 0;
 
 //--------deinterlacer info setting(for deinterlace engine)---------
 	deinter_info.iWidth		= cam_width;
