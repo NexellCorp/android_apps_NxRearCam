@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	private final String NX_DTAG = "MainActivity";
@@ -31,6 +32,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	private int dspWidth;
 	private int dspHeight;
 	private int moduleIdx;
+	private int lcdWidth;
+	private int lcdHeight;
+
+
 
 	private SurfaceView mSurfaceView;
 	private SurfaceHolder mSurfaceHolder;
@@ -39,6 +44,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
 	private Display display;
 	private Point dspSize;
+	private int screen_width;
+	private int screen_height;
 
 	private int ret;
 
@@ -47,6 +54,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 
 		m_Context = this;
@@ -69,13 +78,30 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
 		mSurfaceHolder.addCallback(this);
 
-		super.onCreate(savedInstanceState);
+		display = getWindowManager().getDefaultDisplay();
+		screen_width = display.getWidth();
+		screen_height = display.getHeight();
+
+		m_RearCamCtrl = new NxRearCamCtrl();
+
+		m_RearCamCtrl.RearCamSetParam(screen_width, screen_height);
+
+		RelativeLayout.LayoutParams layout_params = (RelativeLayout.LayoutParams) mSurfaceView.getLayoutParams();
+		layout_params.width = m_RearCamCtrl.GetDisplayWidth();
+		layout_params.height = m_RearCamCtrl.GetDisplayHeight();
+		layout_params.leftMargin = m_RearCamCtrl.GetDisplayPositionX();
+		layout_params.topMargin = m_RearCamCtrl.GetDisplayPositionY();
+		mSurfaceView.setLayoutParams(layout_params);
+
+
+		Log.d(NX_DTAG, "-------SurfaceView size : "+layout_params.width+"x"+layout_params.height);
+		Log.d(NX_DTAG, "-------SurfaceView Start Position : "+layout_params.leftMargin+","+layout_params.topMargin);
 
 	}
 
 	@Override
 	protected void onResume() {
-
+		super.onResume();
 		//----------------------------------------------------------------------------------
 		//Display setting(full screen)
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -88,7 +114,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		);
 		//----------------------------------------------------------------------------------
 
-		super.onResume();
 	}
 
 	@Override
@@ -116,16 +141,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		dspWidth = mSurfaceView.getWidth();
 		dspHeight = mSurfaceView.getHeight();
 
-		Log.d(NX_DTAG, "-------widht : "+dspWidth+"  height : "+dspHeight);
+		Log.d(NX_DTAG, "-------width : "+dspWidth+"  height : "+dspHeight);
 
-		m_RearCamCtrl = new NxRearCamCtrl(dspX, dspY, dspWidth, dspHeight);
+		//m_RearCamCtrl = new NxRearCamCtrl(dspX, dspY, dspWidth, dspHeight);
 		m_CmdReceiver = new NxCmdReceiver(m_Handler,m_RearCamCtrl);
-
-		moduleIdx = m_RearCamCtrl.GetModuleIdx();
-
-		Log.d(NX_DTAG, "-------module idx : "+moduleIdx);
-
-		m_RearCamCtrl.SetModuleIdx(moduleIdx);
 
 		m_RearCamCtrl.StartCmdService();
 		m_CmdReceiver.setDaemon(true);

@@ -5,28 +5,21 @@ import android.view.Surface;
 public class NxRearCamCtrl {
 	private static final String NX_TAG = "NxRearCamCtrl";
 
-	private int m_dspX;
-	private int m_dspY;
-	private int m_dspWidth;
-	private int m_dspHeight;
-	private int m_moduleIdx;
 	private Surface m_Surf = null;
 
-	public NxRearCamCtrl(int dspX, int dspY, int dspWidth, int dspHeight){
-		this.m_dspX = dspX;
-		this.m_dspY = dspY;
-		this.m_dspWidth = dspWidth;
-		this.m_dspHeight = dspHeight;
+	//public NxRearCamCtrl(int dspX, int dspY, int dspWidth, int dspHeight){
+	public NxRearCamCtrl(){
+
 	};
 
-	public void SetModuleIdx(int moduleIdx)
+	public synchronized void RearCamSetParam(int screen_width, int screen_height)
 	{
-		m_moduleIdx = moduleIdx;
+		NX_JniNxRearCamSetParam(screen_width, screen_height);
 	}
 
 	public synchronized int RearCamStart()
 	{
-		return NX_JniNxRearCamStart(m_dspX, m_dspY, m_dspWidth, m_dspHeight, m_moduleIdx, m_Surf);
+		return NX_JniNxRearCamStart(m_Surf);
 	}
 
 	public synchronized boolean RearCamStop()
@@ -54,21 +47,39 @@ public class NxRearCamCtrl {
 		m_Surf = surf;
 	}
 
-	public synchronized int GetModuleIdx(){
-		m_moduleIdx = NX_JniGetQuickRearCamModuleIdx();
-		return m_moduleIdx;
+	public synchronized int GetDisplayWidth()
+	{
+		return NX_JniNXGetDisplayWidth();
+	}
+
+	public synchronized int GetDisplayHeight()
+	{
+		return NX_JniNXGetDisplayHeight();
+	}
+
+	public synchronized int GetDisplayPositionX()
+	{
+		return NX_JniNXGetDisplayPositionX();
+	}
+
+	public synchronized int GetDisplayPositionY()
+	{
+		return NX_JniNXGetDisplayPositionY();
 	}
 
 	static{
 		System.loadLibrary("nxrearcam_jni");
 	}
 
-	public native int NX_JniNxRearCamStart(int dspX, int dspY, int dspWidth, int dspHeight, int moduleIdx, Surface sf);
+	public native int NX_JniNxRearCamSetParam(int lcdWidth, int lcdHeight);
+	public native int NX_JniNxRearCamStart(Surface sf);
 	public native boolean NX_JniNxRearCamStop();
 	public native int NX_JniNxStartCmdService();
 	public native int NX_JniCheckReceivedStopCmd();
 	public native int NX_JniNXStopCommandService();
-	public native int NX_JniGetQuickRearCamModuleIdx();
-
+	public native int NX_JniNXGetDisplayWidth();
+	public native int NX_JniNXGetDisplayHeight();
+	public native int NX_JniNXGetDisplayPositionX();
+	public native int NX_JniNXGetDisplayPositionY();
 
 }
